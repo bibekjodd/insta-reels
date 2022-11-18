@@ -1,35 +1,32 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import instagram from './images/instagram.svg'
+import { FcGoogle } from 'react-icons/fc'
+import { useGlobalContext } from '../context/AuthContext'
 
 
 function Login() {
+    const { login, loading } = useGlobalContext();
+
     return (
-        <div className='min-h-screen grid sm:place-items-center xs-:py-10'>
-            <div className='mx-auto'>
-                <div className=' w-full flex flex-col  xs-:max-w-sm text-center  bg-white  p-4 border-2 border-neutral-200/50 rounded-md shadow-md shadow-gray-100'>
-
-                    <img src={instagram} alt=""
-                        className='w-40 mx-auto object-contain' />
-
-                    <p className='text-sm text-zinc-500 my-2.5'>Sign up to see photo and videos from your friends</p>
-
-                    <form className='text-left flex flex-col space-y-3  mb-6'>
-                        <input type="text" name="email" id="" placeholder='Email'
-                            className='outline-none border-2 border-gray-200 focus:border-gray-300 rounded-md pl-1.5 py-1'
-                        />
-                        <input type="text" name="password" id="" placeholder='Password'
-                            className='outline-none border-2 border-gray-200 focus:border-gray-300 rounded-md pl-1.5 py-1'
-                        />
-                        <button className=' bg-sky-500 text-white font-semibold hover:bg-sky-600 active:bg-sky-700 py-1.5 rounded-md'>Login</button>
-                    </form>
-                    <p className='text-zinc-500   text-sm '>By signing up, you agree to our Terms, Conditions and cookies policy</p>
-                </div>
-                <h4 className='border-2 mx-4 text-gray-700 xs-:mx-0 border-neutral-200/50 py-1.5 text-center bg-white mt-3 rounded-md'>
-                    Not registered yet? <Link className='text-sky-600 hover:underline' to='/signup'>Register</Link>
-                </h4>
+        <div className='h-screen flex flex-col'>
+            {/* top  */}
+            <div className='px-3 sm:px-4 md:px-5 py-2'>
+                <img src={instagram} alt=""
+                    className='w-24 sm:w-32 md:w-36 object-contain' />
             </div>
-        </div>
+
+            {/* login */}
+            <div className='h-full grid place-items-center '>
+                <button
+                    disabled={loading}
+                    onClick={login}
+                    className='flex disabled:cursor-not-allowed justify-center px-5 items-center my-10 border-2 border-gray-100  rounded-md py-2 font-semibold space-x-1'>
+                    <span>Login with Google</span>
+                    <FcGoogle className='text-2xl ' />
+                </button>
+            </div>
+        </div >
     )
 }
 
