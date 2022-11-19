@@ -6,7 +6,7 @@ import Posts from './Posts';
 import UploadFile from './UploadFile';
 
 function Feed() {
-    const { logout, user } = useGlobalContext();
+    const { user } = useGlobalContext();
 
     useEffect(() => {
         const updateUserData = async () => {
@@ -20,15 +20,11 @@ function Feed() {
                     photoURL,
                 });
             }
-
-
         }
         updateUserData();
     }, [])
     return (
-        <div className=''>
-            <button onClick={logout}>Logout</button>
-            <UploadFile />
+        <div className='flex flex-col items-center flex-grow overflow-y-scroll h-full scrollbar-hide '>
             <Posts />
         </div>
     )

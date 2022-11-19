@@ -4,6 +4,7 @@
 
 body {
     background: rgb(249 250 251);
+    scroll-behavior: smooth;
 }
 
 .upload-progress {

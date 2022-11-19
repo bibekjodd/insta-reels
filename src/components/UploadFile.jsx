@@ -9,10 +9,9 @@ import { useNavigate } from 'react-router-dom';
 
 
 function UploadFile() {
+    const { logout } = useGlobalContext();
     const inputRef = useRef(null);
-    const navigate = useNavigate();
     const { user } = useGlobalContext();
-    // console.log(user)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -47,7 +46,6 @@ function UploadFile() {
 
             function fn1(snapshot) {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(`${progress}% upload done`)
             }
 
             function fn2(error) {
@@ -60,21 +58,18 @@ function UploadFile() {
 
             async function fn3() {
                 const url = await getDownloadURL(storageRef);
-                console.log("Download url:", url);
-                // await addDoc(collection(db,uid))
                 const { displayName, email, photoURL } = user;
                 const uploadRef = await addDoc(collection(db, 'posts'), {
                     likes: [],
                     comments: [],
-                    postId: uid,
-                    postUrl: url,
+                    videoUrl: url,
                     uName: displayName,
-                    userId: email,
+                    email: email,
+                    uid: user.uid,
                     uProfile: photoURL,
                     createdAt: serverTimestamp()
                 });
-                // console.log(`uploadRef:`, uploadRef)
-                // console.log("upload ref id:", uploadRef.id)
+
                 await updateDoc(doc(db, 'users', user.uid), {
                     postIds: arrayUnion(uploadRef.id)
                 })
@@ -83,7 +78,6 @@ function UploadFile() {
             }
         } catch (err) {
             setError('Error occurred during upload');
-            console.log(error)
             setTimeout(() => {
                 setError('');
             }, 2000)
@@ -95,25 +89,31 @@ function UploadFile() {
 
     return (
         <div>
+            <button onClick={logout}>
+                logout
+            </button>
             <input
                 ref={inputRef}
                 onChange={(e) => { handleChange(e.target.files[0]) }}
                 type="file" id='upload-input' accept='video/*'
                 className='hidden'
             />
-            <div className='relative w-fit mx-auto overflow-hidden text-fuchsia-700'>
+            <div>
                 {error !== '' && <div className='text-center text-rose-600'>
                     {error}
                 </div>}
-                <label htmlFor='upload-input'
-                    className={`flex items-center w-fit disabled:opacity-40 px-2 py-1 rounded-sm border-2 border-fuchsia-700/70  ${loading ? 'border-b-0 ' : ' cursor-pointer'}`}>
-                    <TfiVideoClapper />
-                    <span className='ml-2'>UPLOAD VIDEO</span>
-                    {loading && <>
-                        <div className='upload-progress bg-fuchsia-700 absolute w-1/2 h-1  bottom-0 left-0 z-20' />
-                        <div className=' bg-fuchsia-700/40 absolute w-full h-1  bottom-0 left-0 ' />
-                    </>}
-                </label>
+                <div className='relative w-fit mx-auto overflow-hidden text-fuchsia-700'>
+
+                    <label htmlFor='upload-input'
+                        className={`flex items-center w-fit disabled:opacity-40 px-2 py-1 rounded-sm border-2 border-fuchsia-700/70  ${loading ? 'border-b-0 ' : ' cursor-pointer'}`}>
+                        <TfiVideoClapper />
+                        <span className='ml-2'>UPLOAD VIDEO</span>
+                        {loading && <>
+                            <div className='upload-progress bg-fuchsia-700 absolute w-1/2 h-1  bottom-0 left-0 z-20' />
+                            <div className=' bg-fuchsia-700/40 absolute w-full h-1  bottom-0 left-0 ' />
+                        </>}
+                    </label>
+                </div>
             </div>
 
         </div >
