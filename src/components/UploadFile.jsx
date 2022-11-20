@@ -9,9 +9,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 function UploadFile() {
-    const { logout } = useGlobalContext();
     const inputRef = useRef(null);
-    const { user } = useGlobalContext();
+    const { user, modalOpen } = useGlobalContext();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -70,7 +69,7 @@ function UploadFile() {
                     createdAt: serverTimestamp()
                 });
 
-                await updateDoc(doc(db, 'users', user.uid), {
+                await updateDoc(doc(db, 'users', user.email), {
                     postIds: arrayUnion(uploadRef.id)
                 })
                 setLoading(false);
@@ -88,10 +87,8 @@ function UploadFile() {
     }
 
     return (
-        <div>
-            <button onClick={logout}>
-                logout
-            </button>
+        !modalOpen && <div className='mb-2 flex justify-start sm:justify-center px-4'>
+
             <input
                 ref={inputRef}
                 onChange={(e) => { handleChange(e.target.files[0]) }}
@@ -105,7 +102,7 @@ function UploadFile() {
                 <div className='relative w-fit mx-auto overflow-hidden text-fuchsia-700'>
 
                     <label htmlFor='upload-input'
-                        className={`flex items-center w-fit disabled:opacity-40 px-2 py-1 rounded-sm border-2 border-fuchsia-700/70  ${loading ? 'border-b-0 ' : ' cursor-pointer'}`}>
+                        className={`flex items-center w-fit disabled:opacity-40 px-2 py-1 rounded-sm border border-fuchsia-700/70  ${loading ? 'border-b-0 ' : ' cursor-pointer'}`}>
                         <TfiVideoClapper />
                         <span className='ml-2'>UPLOAD VIDEO</span>
                         {loading && <>

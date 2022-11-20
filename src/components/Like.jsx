@@ -1,15 +1,14 @@
 import { updateDoc, arrayRemove, arrayUnion, doc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
-import { RiHeartLine, RiHeartFill } from 'react-icons/ri'
-import { HiOutlineChatBubbleOvalLeft } from 'react-icons/hi2'
+import { RiHeartLine, RiHeartFill, RiChat1Line } from 'react-icons/ri'
 import { useGlobalContext } from '../context/AuthContext';
 import { db } from '../firebase';
 
-function Like({ likes, id, comments }) {
+function Like({ likes, id, comments, index }) {
     const [like, setLike] = useState(null);
-    const { user } = useGlobalContext();
+    const { user, setModalOpen, setModalIndex } = useGlobalContext();
     useEffect(() => {
-        const check = likes.includes(user.email);
+        const check = likes?.includes(user.email) || false;
         setLike(check);
     }, [likes]);
 
@@ -28,20 +27,25 @@ function Like({ likes, id, comments }) {
     }
 
     return (
-        <div className='flex items-center mt-3 space-x-2'>
+        <div className='flex items-center mt-3 space-x-2 select-none'>
             <button
                 onClick={postLike}
             >
                 <div className='transition-all hover:scale-110 active:scale-125 '>
-                    {like ? <RiHeartFill className='text-2xl  text-pink-500' />
+                    {like ? <RiHeartFill className='text-2xl  text-rose-500' />
                         : <RiHeartLine className='text-2xl  ' />
                     }
                 </div>
-                <span>{likes.length}</span>
+                <span>{likes?.length}</span>
             </button>
-            <button>
-                <HiOutlineChatBubbleOvalLeft className='text-2xl transition-all hover:scale-110 active:scale-125 ' />
-                <span>{comments.length}</span>
+            <button
+                onClick={() => {
+                    setModalIndex(index);
+                    setModalOpen(true);
+                }}
+            >
+                <RiChat1Line className='text-2xl transition-all hover:scale-110 active:scale-125 ' />
+                <span>{comments?.length}</span>
             </button>
         </div>
     )
